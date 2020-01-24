@@ -83,26 +83,26 @@ ARM Macro Assembler    Page 2
    43 00000000         ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
    44 00000000         ; </h>
    45 00000000         
-   46 00000000 00000400 
+   46 00000000 00002000 
                        Stack_Size
-                               EQU              0x400
+                               EQU              0x2000
    47 00000000         
    48 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
 =3
    49 00000000         Stack_Mem
                                SPACE            Stack_Size
-   50 00000400         __initial_sp
-   51 00000400         
-   52 00000400         
-   53 00000400         ; <h> Heap Configuration
-   54 00000400         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-   55 00000400         ; </h>
-   56 00000400         
-   57 00000400 00000200 
+   50 00002000         __initial_sp
+   51 00002000         
+   52 00002000         
+   53 00002000         ; <h> Heap Configuration
+   54 00002000         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   55 00002000         ; </h>
+   56 00002000         
+   57 00002000 00000200 
                        Heap_Size
                                EQU              0x200
-   58 00000400         
-   59 00000400                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+   58 00002000         
+   59 00002000                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
 3
    60 00000000         __heap_base
    61 00000000         Heap_Mem
@@ -761,13 +761,13 @@ ARM Macro Assembler    Page 12
   391 0000001C                 END
               00000000 
               00000000 
-Command Line: --debug --xref --cpu=Cortex-M4.fp --apcs=interwork --depend=temp_
-pj1\startup_stm32f411xe.d -otemp_pj1\startup_stm32f411xe.o -IC:\Work_murmansk\S
-TM32\STM32_072\Cube_STM32\temp_Pj1\MDK-ARM\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\
-4.2.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0 --predefine
-="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 513" --predefine="_RTE
-_ SETA 1" --predefine="STM32F411xE SETA 1" --list=startup_stm32f411xe.lst start
-up_stm32f411xe.s
+Command Line: --debug --xref --cpu=Cortex-M4.fp --apcs=interwork --depend=.\tem
+p_pj1\startup_stm32f411xe.d -o.\temp_pj1\startup_stm32f411xe.o -IC:\Work\projec
+t_Micropanorama\uPanorama_modulator\temp_Pj1\MDK-ARM\RTE -IC:\Keil_v5\ARM\PACK\
+ARM\CMSIS\4.2.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0 -
+-predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 513" --prede
+fine="_RTE_ SETA 1" --predefine="STM32F411xE SETA 1" --list=startup_stm32f411xe
+.lst startup_stm32f411xe.s
 
 
 
@@ -790,7 +790,7 @@ Symbol: Stack_Mem
    Uses
       None
 Comment: Stack_Mem unused
-__initial_sp 00000400
+__initial_sp 00002000
 
 Symbol: __initial_sp
    Definitions
@@ -1572,7 +1572,7 @@ Symbol: Heap_Size
    Uses
       At line 61 in file startup_stm32f411xe.s
 Comment: Heap_Size used once
-Stack_Size 00000400
+Stack_Size 00002000
 
 Symbol: Stack_Size
    Definitions

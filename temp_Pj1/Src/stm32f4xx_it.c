@@ -43,13 +43,12 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 
-extern u32 TIME_SYS;
-extern u32 TIME_TEST;
 extern uint32_t TIMER1;
+extern u32 TIMER_BP_PWM;
 extern u8 flag_pachka_TXT; //устанавливаем флаг передачи
 extern volatile unsigned int rx_wr_index1,rx_rd_index1,rx_counter1;
 extern volatile u32 SysTickDelay; 
-extern unsigned int timer_INIT_FAPCH1; 
+
 extern unsigned int timer_DMA2;
 extern u8 EVENT_INT0;
 extern u8 EVENT_INT1;
@@ -59,8 +58,8 @@ extern u8 EVENT_INT4;
 extern u8 EVENT_INT5;
 extern u8 EVENT_INT6;
 extern u8 EVENT_INT7;
-extern u8 EVENT_INT8;
-
+extern u32 TIME_TEST;
+extern u64 TIME_SYS;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,8 +79,9 @@ extern DMA_HandleTypeDef hdma_usart1_tx;
 extern DMA_HandleTypeDef hdma_usart6_tx;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart6;
+extern TIM_HandleTypeDef htim4;
 /* USER CODE BEGIN EV */
-
+extern u8 FLAG_DMA_ADC;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -206,7 +206,8 @@ void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
   if (SysTickDelay != 0) {SysTickDelay--;}  
-  timer_INIT_FAPCH1++;
+
+  if (TIMER_BP_PWM!=0) TIMER_BP_PWM--;
   timer_DMA2++;
   TIMER1++;
   TIME_SYS++;
@@ -253,33 +254,33 @@ void EXTI1_IRQHandler(void)
   /* USER CODE END EXTI1_IRQn 1 */
 }
 
-void EXTI2_IRQHandler(void)
+/**
+  * @brief This function handles EXT3 line1 interrupt.
+  */
+void EXTI3_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI1_IRQn 0 */
 
   /* USER CODE END EXTI1_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
   /* USER CODE BEGIN EXTI1_IRQn 1 */
-     EVENT_INT2=1;
+     EVENT_INT3=1;
   /* USER CODE END EXTI1_IRQn 1 */
 }
 
 /**
-  * @brief This function handles EXTI line[9:5] interrupts.
+  * @brief This function handles EXT9-EXT5 line1 interrupt.
   */
 void EXTI9_5_IRQHandler(void)
 {
-  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+  /* USER CODE BEGIN EXTI1_IRQn 0 */
 
-  /* USER CODE END EXTI9_5_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_7);
-  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
-	EVENT_INT7=1;
-  /* USER CODE END EXTI9_5_IRQn 1 */
+  /* USER CODE END EXTI1_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
+  /* USER CODE BEGIN EXTI1_IRQn 1 */
+     EVENT_INT6=1;
+  /* USER CODE END EXTI1_IRQn 1 */
 }
-
-
-
 /**
   * @brief This function handles ADC1 global interrupt.
   */
@@ -290,7 +291,7 @@ void ADC_IRQHandler(void)
   /* USER CODE END ADC_IRQn 0 */
   HAL_ADC_IRQHandler(&hadc1);
   /* USER CODE BEGIN ADC_IRQn 1 */
-
+  FLAG_DMA_ADC=1;
   /* USER CODE END ADC_IRQn 1 */
 }
 
@@ -342,8 +343,7 @@ void DMA2_Stream6_IRQHandler(void)
 void DMA2_Stream7_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Stream7_IRQn 0 */
-  flag_pachka_TXT=0; //снимаем флаг передачи
-  timer_DMA2=0;
+	flag_pachka_TXT=0; //снимаем флаг передачи
   /* USER CODE END DMA2_Stream7_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart1_tx);
   /* USER CODE BEGIN DMA2_Stream7_IRQn 1 */
@@ -364,6 +364,21 @@ void USART6_IRQHandler(void)
 
   /* USER CODE END USART6_IRQn 1 */
 }
+
+/**
+  * @brief This function handles TIM4 global interrupt.
+  */
+void TIM4_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM4_IRQn 0 */
+
+  /* USER CODE END TIM4_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim4);
+  /* USER CODE BEGIN TIM4_IRQn 1 */
+
+  /* USER CODE END TIM4_IRQn 1 */
+}
+
 
 /* USER CODE BEGIN 1 */
 

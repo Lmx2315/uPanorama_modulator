@@ -46,7 +46,7 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>temp_Pj1\</OutputDirectory>
+          <OutputDirectory>.\temp_Pj1\</OutputDirectory>
           <OutputName>temp_Pj1</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
@@ -171,11 +171,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4107</DriverSelection>
+            <DriverSelection>4103</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>STLink\ST-LINKIII-KEIL_SWO.dll</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -347,7 +347,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -437,24 +437,14 @@
               <FilePath>../Src/stm32f4xx_hal_msp.c</FilePath>
             </File>
             <File>
-              <FileName>ADC.c</FileName>
+              <FileName>W5200.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\ADC.c</FilePath>
+              <FilePath>..\Src\W5200.c</FilePath>
             </File>
             <File>
-              <FileName>DAC.c</FileName>
+              <FileName>adf4351.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\DAC.c</FilePath>
-            </File>
-            <File>
-              <FileName>lmk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\lmk.c</FilePath>
-            </File>
-            <File>
-              <FileName>eth.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\eth.c</FilePath>
+              <FilePath>..\Src\adf4351.c</FilePath>
             </File>
           </Files>
         </Group>

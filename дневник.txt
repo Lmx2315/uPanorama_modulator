@@ -1,2 +1,90 @@
+24-01-2020
+----------
+Белый программатор с надписью MICROP - видится в кейле как ST-LINK debager
+неприятное открытие - мк управляет включением 5вольтового лдо , а на нём сидит FTDI и соответственно при первом включении
+не работает так как мк не включает лдо.
+
+
 21-01-2020
 ----------
+
+выходы:
+
+GK153_PWRDN	PC0
+ADL_PWRDN	PC1
+ADF_LE		PC4
+APLF1_PWRDN	PA11
+APLF2_PWRDN	PA12
+ADL5501_PWRDN	PB6
+UPR_SWITCH1	PB7
+PWR_5V_EN	PE0
+PWR_3V#	_EN	PE1
+PWR_HM_EN	PE3
+PWDWN_WIZ820	PE7
+RESET_WIZ	PE8
+
+LED1		PC13
+LED2		PC14
+LED3		PC15
+
+HM_TR_ENABLE_3V3	PD0
+HM_TR_CONFIG_3V3	PD1
+
+
+LE_A_ATT	PD9
+D0_S1		PD10
+D1_S1		PD11
+D2_S1		PD12
+D3_S1		PD13
+D4_S1		PD14
+D5_S1		PD15
+
+
+
+входы:
+ADF_MUX		PC4
+ADF_LD		PC5
+
+Прерывания:
+INT_WIZ820	PD8
+
+
+
+SPI2:
+SPI_CS1		PB10
+SPI_NSS		PB13
+SPI_SCK		PB13
+SPI_MISO	PB14
+SPI_MOSI	PB15
+
+
+SPI3:
+CS_MK		PC9
+SCK_MK		PC10
+MISO_MK		PC11
+MOSI_MK		PC12
+
+SPI4:
+SCK_MK		PE2
+NSS_MK		PE4
+MISO_MK		PE5
+MOSI_MK		PE6
+
+MK_UART_TX	PA9
+MK_UART_RX	PA10
+
+MK_UART6_TX	PC6
+MK_UART6_RX	PC7
+
+MK_UART2_TX	PD5
+MK_UART2_RX	PD6
+
+TIM:
+TIM1_TNC2	PE13
+TIM1_TNC1	PE14
+
+
+
+ADC:
+REF_POWER_CONTR		PA0 (ADC0)
+
