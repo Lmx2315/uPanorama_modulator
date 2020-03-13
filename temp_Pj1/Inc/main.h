@@ -109,7 +109,11 @@ typedef unsigned long uint32;
 
 
 /* USER CODE END EFP */
-
+typedef uint8			u_char;		/**< 8-bit value */
+typedef uint8 			SOCKET;
+typedef uint16			u_short;	/**< 16-bit value */
+typedef uint16			u_int;		/**< 16-bit value */
+typedef uint32			u_long;		/**< 32-bit value */
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private defines */
 #define PA11_0  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11,GPIO_PIN_RESET)
@@ -136,11 +140,9 @@ typedef unsigned long uint32;
 #define PB12_0  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12,GPIO_PIN_RESET)
 #define PB12_1  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12,GPIO_PIN_SET)
 
-#define PC13_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13,GPIO_PIN_RESET)
-#define PC13_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13,GPIO_PIN_SET)
 
-#define PC3_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3,GPIO_PIN_RESET)
-#define PC3_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3,GPIO_PIN_SET)
+
+
 
 #define PC0_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0,GPIO_PIN_RESET)
 #define PC0_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0,GPIO_PIN_SET)
@@ -151,8 +153,14 @@ typedef unsigned long uint32;
 #define PC2_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2,GPIO_PIN_RESET)
 #define PC2_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2,GPIO_PIN_SET)
 
+#define PC3_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3,GPIO_PIN_RESET)
+#define PC3_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3,GPIO_PIN_SET)
+
 #define PC4_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4,GPIO_PIN_RESET)
 #define PC4_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4,GPIO_PIN_SET)
+
+#define PC5_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5,GPIO_PIN_RESET)
+#define PC5_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5,GPIO_PIN_SET)
 
 #define PC8_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8,GPIO_PIN_RESET)
 #define PC8_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8,GPIO_PIN_SET)
@@ -270,9 +278,9 @@ typedef unsigned long uint32;
 
 #define LED1(a) 		((a==1)?PC13_1 : PC13_0)
 #define LED2(a) 		((a==1)?PC14_1 : PC14_0)
-#define LED3(a) 		((a==1)?PC14_1 : PC14_0)
+#define LED3(a) 		((a==1)?PC15_1 : PC15_0)
 
-#define ADF_LE(a) 	 		((a==1)?PD7_1  : PD7_0 )
+#define ADF_LE(a) 	 		((a==1)?PC5_1  : PC5_0 )
 #define GK153_PWRDN(a) 	 	((a==1)?PC0_1  : PC0_0 )
 #define ADL_PWRDN(a) 	 	((a==1)?PC1_1  : PC1_0 )
 #define APLF1_PWRDN(a) 	 	((a==1)?PA11_1 : PA11_0)
@@ -297,8 +305,8 @@ typedef unsigned long uint32;
 #define D5_S1(a)			((a==1)?PD15_1  : PD15_0)
 
 #define SPI2_CS1(a)			((a==1)?PB10_1  : PB10_0)
-#define SPI3_CS_MK(a)			((a==1)?PC9_1   : PC9_0)
-#define SPI4_NSS_MK(a)			((a==1)?PE4_1   : PE4_0)
+#define SPI3_CS_MK(a)		((a==1)?PC9_1   : PC9_0)
+#define SPI4_NSS_MK(a)		((a==1)?PE4_1   : PE4_0)
 
 #define WDI_MK(a)  		 ((a==1)?PB9_1 : PB9_0)
 
@@ -492,6 +500,7 @@ u64 FPGA_rSPI (u8,u8);
 u64 FPGA2_rSPI(u8,u8);
 u32 FPGA_wSPI (u8,u8,u64);
 u32 FPGA2_wSPI(u8,u8,u64);
+void spi3send32 (u32 );
 void spisend_FPGA (u8,u8);
 u8 spisend8 (u8);
 void spisend32 (u32);
@@ -527,6 +536,8 @@ void Set_network(void);
 void MSG_SHOW (void);
 u32 SEND_UDP_MSG (void);
 void ADF4351_prog (u32);
+void RECEIVE_udp(SOCKET , uint16 );
+//void SEND_udp(SOCKET , uint16 ,uint32 ,uint16 );
 
 
 u32 ERROR_CMD_MSG	//формирует структуру квитанции уровня CMD

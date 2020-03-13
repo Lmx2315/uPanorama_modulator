@@ -58,6 +58,7 @@ extern u8 EVENT_INT4;
 extern u8 EVENT_INT5;
 extern u8 EVENT_INT6;
 extern u8 EVENT_INT7;
+extern u8 EVENT_INT8;
 extern u32 TIME_TEST;
 extern u64 TIME_SYS;
 /* USER CODE END PV */
@@ -276,9 +277,9 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE BEGIN EXTI1_IRQn 0 */
 
   /* USER CODE END EXTI1_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
+     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
   /* USER CODE BEGIN EXTI1_IRQn 1 */
-     EVENT_INT6=1;
+     EVENT_INT8=1;
   /* USER CODE END EXTI1_IRQn 1 */
 }
 /**

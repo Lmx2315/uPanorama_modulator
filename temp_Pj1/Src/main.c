@@ -174,6 +174,7 @@ u8 EVENT_INT4=0;
 u8 EVENT_INT5=0;
 u8 EVENT_INT6=0;
 u8 EVENT_INT7=0;
+u8 EVENT_INT8=0;
 u8 FLAG_DMA_ADC=0;
 
 u32 TEST_LED=0;
@@ -244,7 +245,7 @@ void SystemClock_Config(void)
   /** Initializes the CPU, AHB and APB busses clocks 
   */
   
-  /*
+  
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;//
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;//
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -254,7 +255,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLN = 100;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
-  */
+  
+  /*
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -263,7 +265,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLN = 100;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
-
+*/
   
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -594,7 +596,7 @@ static void MX_SPI4_Init(void)
   hspi4.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi4.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi4.Init.NSS = SPI_NSS_SOFT;
-  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
   hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi4.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi4.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -780,20 +782,20 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
 //  __HAL_RCC_GPIOH_CLK_ENABLE();
-//  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pins : */
-  GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_4|GPIO_PIN_9|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
+  GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_9|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
   GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull  = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins :  */
-  GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_7|GPIO_PIN_8;
+  GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_7|GPIO_PIN_8;
   GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull  = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -821,21 +823,21 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   
     /*Configure GPIO pin :  */
-  GPIO_InitStruct.Pin  = GPIO_PIN_4|GPIO_PIN_5;
+  GPIO_InitStruct.Pin  = GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
   
 
   /*Configure GPIO pins : INT_WIZ820 */
-  GPIO_InitStruct.Pin  = GPIO_PIN_8;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;//GPIO_MODE_IT_FALLING
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin  = GPIO_PIN_8;
+    GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;//GPIO_MODE_IT_FALLING
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 
@@ -939,6 +941,26 @@ void assert_failed(uint8_t *file, uint32_t line)
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 
 
+void spi3send32 (u32 d) //32 бита
+{
+	u8 a1;
+	u8 a2;
+	u8 a3;
+	u8 a4;
+	
+	u8 b;
+
+  a1 = (d >> 24)&0xff;
+  a2 = (d >> 16)&0xff;
+  a3 = (d >>  8)&0xff;
+  a4 = (d)      &0xff;
+  
+  HAL_SPI_TransmitReceive(&hspi3, &a1, &b,1, 5000);
+  HAL_SPI_TransmitReceive(&hspi3, &a2, &b,1, 5000);
+  HAL_SPI_TransmitReceive(&hspi3, &a3, &b,1, 5000);
+  HAL_SPI_TransmitReceive(&hspi3, &a4, &b,1, 5000);  
+}
+
 void spi4send32 (u32 d) //32 бита
 {
 	u8 a1;
@@ -967,6 +989,18 @@ u8 spi4send8 (u8 d) //8 бит
   a1 = (d)      &0xff;
   
   HAL_SPI_TransmitReceive(&hspi4, &a1, &b,1, 5000); 
+  return b; 
+}
+
+
+u8 spi3send8 (u8 d) //8 бит
+{
+	u8 a1;
+	u8  b;
+
+  a1 = (d)      &0xff;
+  
+  HAL_SPI_TransmitReceive(&hspi3, &a1, &b,1, 5000); 
   return b; 
 }
 
@@ -1134,11 +1168,11 @@ void hn_out (u64 a,u8 n)
    } 
    Transf(strng);   
 }
-
+/*
 void h_out (u64 a,u8 n)
 {
-   u8 c=0;
-   c=(a>>n)&0xff;	
+   u64 c=0;
+   c=(a>>n)&0x000000ff;	
    sprintf (strng,"%X",c);
    Transf (" ");
    if (c<0x10) 
@@ -1148,7 +1182,7 @@ void h_out (u64 a,u8 n)
    Transf(strng);  
    Transf ("\r\n");   
 }
-
+*/
 void u64_out (char s[],u64 a)
 {
    u64 z=0;	
@@ -1164,7 +1198,7 @@ void u64_out (char s[],u64 a)
 
 void UART_IT_TX (void)
 {
- uint16_t k;
+// uint16_t k;
 /*
 if ((flag_pachka_TXT==0)&&(text_lengh>1u))
 { 
@@ -2038,7 +2072,7 @@ int main(void)
   MX_SPI5_Init();
   MX_USART1_UART_Init();
 //MX_USART2_UART_Init();
-  MX_USART6_UART_Init();
+//MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
 
 //  Delay(1000);
@@ -2049,17 +2083,20 @@ int main(void)
   
   PWDWN_WIZ820(1);
 
-  LED1(0);
-  LED2(0);
-  LED3(0);
+  LED1(1);
+  LED2(1);
+  LED3(1);
 
- Massiv_dbm();
+
+  Massiv_dbm();
  
-HAL_UART_Receive_IT(&huart1,RX_uBUF,1);
-HAL_ADC_Start_DMA  (&hadc1,(uint32_t*)&adcBuffer,16); // Start ADC in DMA 
+  HAL_UART_Receive_IT(&huart1,RX_uBUF,1);
+  HAL_ADC_Start_DMA  (&hadc1,(uint32_t*)&adcBuffer,16); // Start ADC in DMA 
 
 
- ADF_LE				(0);
+
+
+
  GK153_PWRDN		(0);
  ADL_PWRDN			(0);// 1 - powerdown ADL5375
  
@@ -2084,9 +2121,13 @@ HAL_ADC_Start_DMA  (&hadc1,(uint32_t*)&adcBuffer,16); // Start ADC in DMA
  D4_S1				(0);
  D5_S1				(0);
  
- SPI3_CS_MK(0);//выключение микрухи ADF
+
+ADF_LE	  (0);//сигнал загрузки в м-му ADF 
+SPI3_CS_MK(0);//выключение микрухи ADF
  
- //ATT (0);
+
+ 
+ ATT (0);
 //--------init wiz820------------------
 
  SPI4_NSS_MK(1);
@@ -2095,38 +2136,38 @@ HAL_ADC_Start_DMA  (&hadc1,(uint32_t*)&adcBuffer,16); // Start ADC in DMA
  RESET_WIZ(0);
  Delay(2);
  RESET_WIZ(1);
- INIT_SERV_ARCHIV (&SERV1,&ID_SERV1,&ADDR_SNDR);//инициилизируем хранилище и реестр
  
+  LED1(0);
+  LED2(0);
+  LED3(0);
+  
+  INIT_SERV_ARCHIV (&SERV1,&ID_SERV1,&ADDR_SNDR);//инициилизируем хранилище и реестр
+
  while (i<200)
  {
 	 i++;
 	 Delay(1);
-	 WATCH_DOG ();
- }
- 
+ } 
+
  Set_network();
- RECEIVE_udp (0, 3001,1);
+ RECEIVE_udp (0, 3001);
 
   while (1)
   {
-    /* USER CODE END WHILE */
-
-	WATCH_DOG ();
 	LED();
 	UART_conrol();
 	
-//	if (PIN_control_PB5 ()) {Transf("event PB5!\r\n");};
-	
-	if (EVENT_INT1==1)
+	if (EVENT_INT8==1)
 	{
-		EVENT_INT1=0;
-		Transf("event 1!\r");
-		RECEIVE_udp (0, 3001,1);		
-	}; 
+		EVENT_INT8=0;
+		Transf("event WIZ820!\r");
+		RECEIVE_udp (0, 3001);		
+	};
+	RECEIVE_udp (0, 3001);	
 	CMD_search (&ID_SERV1,&SERV1);
 	SEND_UDP_MSG ();
     UART_DMA_TX();
-	//	if (FLAG_DMA_ADC==1) {DMA_ADC();FLAG_DMA_ADC=0;}	
+//	if (FLAG_DMA_ADC==1) {DMA_ADC();FLAG_DMA_ADC=0;}	
   }
 
 }
