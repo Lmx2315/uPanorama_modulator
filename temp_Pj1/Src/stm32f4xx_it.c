@@ -74,13 +74,14 @@ extern u64 TIME_SYS;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern TIM_HandleTypeDef htim1;
 extern DMA_HandleTypeDef hdma_adc1;
 extern ADC_HandleTypeDef hadc1;
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern DMA_HandleTypeDef hdma_usart6_tx;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart6;
-extern TIM_HandleTypeDef htim4;
+
 /* USER CODE BEGIN EV */
 extern u8 FLAG_DMA_ADC;
 /* USER CODE END EV */
@@ -366,20 +367,12 @@ void USART6_IRQHandler(void)
   /* USER CODE END USART6_IRQn 1 */
 }
 
-/**
-  * @brief This function handles TIM4 global interrupt.
-  */
-void TIM4_IRQHandler(void)
+void TIM1_IRQHandler(void)
 {
-  /* USER CODE BEGIN TIM4_IRQn 0 */
 
-  /* USER CODE END TIM4_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim4);
-  /* USER CODE BEGIN TIM4_IRQn 1 */
+  HAL_TIM_IRQHandler(&htim1);
 
-  /* USER CODE END TIM4_IRQn 1 */
 }
-
 
 /* USER CODE BEGIN 1 */
 

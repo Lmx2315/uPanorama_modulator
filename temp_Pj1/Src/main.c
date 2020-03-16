@@ -59,11 +59,7 @@ UART_HandleTypeDef huart6;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart6_tx;
 
-TIM_HandleTypeDef htim4;
-
-TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-TIM_MasterConfigTypeDef sMasterConfig = {0};
-TIM_OC_InitTypeDef sConfigOC = {0};
+TIM_HandleTypeDef htim1;
 
 /* USER CODE BEGIN PV */
 
@@ -200,7 +196,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
-static void MX_TIM4_Init(void);
+//static void MX_TIM4_Init(void);
+static void MX_TIM1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_SPI3_Init(void);
@@ -846,69 +843,47 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
+
+
 /**
-  * @brief TIM4 Initialization Function
+  * @brief TIM1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_TIM4_Init(void)
+static void MX_TIM1_Init(void)
 {
 
-  /* USER CODE BEGIN TIM4_Init 0 */
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+  TIM_OC_InitTypeDef sConfigOC;
 
-  /* USER CODE END TIM4_Init 0 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 65535;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  HAL_TIM_Base_Init(&htim1);
 
-//  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-//  TIM_MasterConfigTypeDef sMasterConfig = {0};
-//  TIM_OC_InitTypeDef sConfigOC = {0};
-
-  /* USER CODE BEGIN TIM4_Init 1 */
-
-  /* USER CODE END TIM4_Init 1 */
-  htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 2;
-  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 8000;
-  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
-  htim4.Init.AutoReloadPreload = TIM_MASTERSLAVEMODE_DISABLE;//TIM_AUTORELOAD_PRELOAD_ENABLE
-  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_Init(&htim4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  
+  HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig);
+
+  HAL_TIM_PWM_Init(&htim1);
+
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  
+  HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig);
+
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity   = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode   = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState  = TIM_OCIDLESTATE_RESET;
-  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM4_Init 2 */
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 
-  /* USER CODE END TIM4_Init 2 */
-  HAL_TIM_MspPostInit(&htim4);
+  HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3);
 
+  HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4);
+
+  HAL_TIM_MspPostInit(&htim1);
 }
-
 
 /**
   * @brief  This function is executed in case of error occurrence.
@@ -1532,7 +1507,7 @@ if (strcmp(Word,"MSG")==0) //
    {
 	  crc_comp =atoi  (DATA_Word); 
       u_out ("принял pwm:",crc_comp); 
-      PWM(crc_comp);
+    //  PWM(crc_comp);
    } else
  if (strcmp(Word,"pwrdn")==0) //
    {
@@ -1894,21 +1869,7 @@ void WATCH_DOG (void)
   * @brief  The application entry point.
   * @retval int
   */
-  
 
-  
-void PWM (u16 a)
-{
-  sConfigOC.Pulse      = a;
-  sConfigOC.OCMode     = TIM_OCMODE_PWM1;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
-  sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
-
-  HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
-  HAL_TIM_Base_Start_IT(&htim4);
-  HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_1);
-  HAL_TIMEx_PWMN_Start(&htim4,TIM_CHANNEL_1);
-}  
 
 
 u32 idx_srv(
@@ -2167,7 +2128,7 @@ int main(void)
 
   MX_DMA_Init ();
   MX_ADC1_Init();
-//MX_TIM4_Init();
+  MX_TIM1_Init();
   MX_SPI2_Init();
   MX_SPI3_Init();
   MX_SPI4_Init();
@@ -2193,6 +2154,8 @@ int main(void)
  
   HAL_UART_Receive_IT(&huart1,RX_uBUF,1);
   HAL_ADC_Start_DMA  (&hadc1,(uint32_t*)&adcBuffer,16); // Start ADC in DMA 
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 
  GK153_PWRDN		(0);
  ADL_PWRDN			(0);// 1 - powerdown ADL5375
