@@ -335,130 +335,7 @@ static void MX_ADC1_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_1;
-  sConfig.Rank = 2;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_2;
-  sConfig.Rank = 3;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_3;
-  sConfig.Rank = 4;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
- 
-/** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_4;
-  sConfig.Rank = 5;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_5;
-  sConfig.Rank = 6;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_6;
-  sConfig.Rank = 7;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_7;
-  sConfig.Rank = 8;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_8;
-  sConfig.Rank = 9;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_9;
-  sConfig.Rank = 10;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_10;
-  sConfig.Rank = 11;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_11;
-  sConfig.Rank = 12;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_12;
-  sConfig.Rank = 13;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_13;
-  sConfig.Rank = 14;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_14;
-  sConfig.Rank = 15;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-  */
-  sConfig.Channel = ADC_CHANNEL_15;
-  sConfig.Rank = 16;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN ADC1_Init 2 */
-  /* USER CODE END ADC1_Init 2 */
-
+  
 }
 
 /**
@@ -1515,10 +1392,10 @@ if (strcmp(Word,"MSG")==0) //
       u_out ("принял pwrdn:",crc_comp); 
       PWDWN_WIZ820(crc_comp);
    } else
- if (strcmp(Word,"ADC_test")==0) //
+ if (strcmp(Word,"adc")==0) //
    {
 	  crc_comp =atoi  (DATA_Word); 
-      u_out ("принял ADC_test:",crc_comp); 
+      u_out ("принял adc:",crc_comp); 
       ADC_test ();
    } else
 if (strcmp(Word,"help")==0)                     
@@ -1797,6 +1674,7 @@ void ADC_test (void)
 	adc_cntl=0;	
 	
 	adc_ch[ 0] = ((float)adcBuffer[0])*3.3/4096*2;
+/*
 	adc_ch[ 1] = ((float)adcBuffer[1])*3.3/4096*2;
 	adc_ch[ 2] = ((float)adcBuffer[2])*3.3*5.71428/4096;//12 Вольт делитель 47к-10к
 	adc_ch[ 3] = ((float)adcBuffer[3])*3.3/4096*2;
@@ -1812,10 +1690,12 @@ void ADC_test (void)
 	adc_ch[13] = ((float)adcBuffer[4])*3.3/4096;
 	adc_ch[14] = ((float)adcBuffer[4])*3.3/4096;
 	adc_ch[15] = ((float)adcBuffer[4])*3.3/4096;
-	
+	*/
 	
 	Transf("\r\n---------\r\n");
-	f_out("CONTR_1_4	 :",adc_ch[0 ]);
+	f_out("REF power:",adc_ch[0 ]);
+	u_out("adcBuffer:",adcBuffer[0 ]);
+/*
 	f_out("CONTR_2_4     :",adc_ch[1 ]);
 	f_out("CONTR_3_4     :",adc_ch[2 ]);
 	f_out("CONTR_4_4     :",adc_ch[3 ]);
@@ -1834,14 +1714,16 @@ void ADC_test (void)
 	f_out("CONTR_2_3     :",adc_ch[13]);
 	f_out("CONTR_3_3     :",adc_ch[14]);
 	f_out("CONTR_4_3     :",adc_ch[15]);
-
+*/
 //	f_out("temp_sens(С)  :",ADC_Temp(adc_ch[4]));
 	
-	Transf("\r\r\r");
-	u_out("CONTR_1_4     :",adcBuffer[0 ]);
+//	Transf("\r\r\r");
+
+/*
 	u_out("CONTR_2_4     :",adcBuffer[1 ]);
 	u_out("CONTR_3_4     :",adcBuffer[2 ]);
 	u_out("CONTR_4_4     :",adcBuffer[3 ]);
+	*/
 	
 }
 
@@ -2153,7 +2035,7 @@ int main(void)
   Massiv_dbm();
  
   HAL_UART_Receive_IT(&huart1,RX_uBUF,1);
-  HAL_ADC_Start_DMA  (&hadc1,(uint32_t*)&adcBuffer,16); // Start ADC in DMA 
+  HAL_ADC_Start_DMA  (&hadc1,(uint32_t*)&adcBuffer,1); // Start ADC in DMA 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 
@@ -2225,7 +2107,7 @@ SPI3_CS_MK(0);//выключение микрухи ADF
 	CMD_search (&ID_SERV1,&SERV1);
 	SEND_UDP_MSG ();
     UART_DMA_TX();
-//	if (FLAG_DMA_ADC==1) {DMA_ADC();FLAG_DMA_ADC=0;}	
+	if (FLAG_DMA_ADC==1) {DMA_ADC();FLAG_DMA_ADC=0;}	
   }
 
 }

@@ -26,11 +26,26 @@ Project File Date:  03/13/2020
 
 <h2>Output:</h2>
 Build target 'temp_Pj1'
-compiling stm32f4xx_hal_msp.c...
+compiling main.c...
+../Src/main.c(1045): warning:  #181-D: argument is incompatible with corresponding format string conversion
+     sprintf (strng,"%u",z);
+../Src/main.c(1047): warning:  #181-D: argument is incompatible with corresponding format string conversion
+     sprintf (strng,"%u",a);
+../Src/main.c(1676): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        adc_ch[ 0] = ((float)adcBuffer[0])*3.3/4096*2;
+../Src/main.c(1782): warning:  #177-D: variable "D" was declared but never referenced
+        u8 D[4];
+../Src/main.c(346): warning:  #177-D: function "MX_I2C1_Init" was declared but never referenced
+  static void MX_I2C1_Init(void)
+../Src/main.c(565): warning:  #177-D: function "MX_USART2_UART_Init" was declared but never referenced
+  static void MX_USART2_UART_Init(void)
+../Src/main.c(599): warning:  #177-D: function "MX_USART6_UART_Init" was declared but never referenced
+  static void MX_USART6_UART_Init(void)
+../Src/main.c: 7 warnings, 0 errors
 linking...
-Program Size: Code=40712 RO-data=680 RW-data=364 ZI-data=34908  
+Program Size: Code=39092 RO-data=680 RW-data=364 ZI-data=34908  
 FromELF: creating hex file...
-".\temp_Pj1\temp_Pj1.axf" - 0 Error(s), 0 Warning(s).
+".\temp_Pj1\temp_Pj1.axf" - 0 Error(s), 7 Warning(s).
 
 <h2>Software Packages used:</h2>
 
