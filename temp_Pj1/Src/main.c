@@ -809,7 +809,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins :  */
-  GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1;
+  GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
   GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull  = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1457,11 +1457,26 @@ if (strcmp(Word,"time")==0) //
 //	  u_out("TIME_TEST:",TIME_TEST);
 	  
    } else	
+if (strcmp(Word,"att")==0) //
+   {
+	  crc_comp =atoi  (DATA_Word); 
+      u_out ("принял att:",crc_comp); 
+	  ATT (crc_comp);
+   } else
+if (strcmp(Word,"APLF")==0) //
+   {
+	  crc_comp =atoi  (DATA_Word); 
+      u_out ("принял att:",crc_comp); 
+	  APLF1_PWRDN (crc_comp);// 1 - усилитель (1) выключен
+	  APLF2_PWRDN (crc_comp);// 1 - усилитель (2) выключен
+   } else
 if (strcmp(Word,"adf")==0) //
    {
 	  crc_comp =atoi  (DATA_Word); 
       u_out ("принял adf:",crc_comp); 
-	     ADF4351_prog (crc_comp);
+	    ADF4351_prog (crc_comp);
+		APLF1_PWRDN		(0);// 1 - усилитель (1) выключен
+		APLF2_PWRDN		(0);// 1 - усилитель (2) выключен
    } else	
 if (strcmp(Word,"mem")==0) //
    {

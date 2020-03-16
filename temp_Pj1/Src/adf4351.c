@@ -52,41 +52,41 @@ reg_ADF4351 pll1;
 void INIT_PLL (reg_ADF4351 *pll)
 {
 	pll->FRAC							=0;// 0     -    4095
-	pll->INT							=150;// (65536 > INT >22 ) если 4/5 и больше 75 если 8/9!!!
+	pll->INT							=3000;// (65536 > INT >22 ) если 4/5 и больше 75 если 8/9!!!
 	pll->PHASE_ADJUST					=0;//0 - OFF
 	pll->PRESCALER						=0;//0 - 4/5  |  1 - 8/9
 	pll->PHASE							=1;//(RECOMMENDED)
-	pll->MOD							=100;	
+	pll->MOD							=2;	
 	pll->LNALSM							=0;//	0 - low noise mode    3 - low spur mode           //LOW NOISE AND LOW SPUR MODES 
-	pll->MUXOUT							=3;//3 - R counter output, было - 2
+	pll->MUXOUT							=6;//3 - R counter output, было - 2, 6 - Digital lock detect
 	pll->REF_DOUBLER					=0;
 	pll->RDIV2							=1;
 	pll->R_COUNTER						=50;
 	pll->DOUB_BUFFER					=0;
-	pll->CP_CURRENT						=7;//7-2.5mA
+	pll->CP_CURRENT						=15;//15 - 5 mA,7-2.5mA
 	pll->LDF							=1;//1 - INT N
 	pll->LDP							=0;//0 - 10 ns
 	pll->PD_POLARITY					=1;//0 - negative 1 -positive
 	pll->POWER_DOWN						=0;//0 - disable PWRDN
-	pll->CP_THREESTATE					=0;// ENABLE 3-state
+	pll->CP_THREESTATE					=0;// 1 - ENABLE 3-state, 0 - disable
 	pll->COUNTER_RESET					=0;
-	pll->BAND_SELECT_CLOCK_MODE			=0;
-	pll->ABP							=1;
-	pll->CHARGE_CANCEL					=0;
-	pll->CSR							=0;
-	pll->CLK_DIV_MODE					=0;//1-activate fast lock
+	pll->BAND_SELECT_CLOCK_MODE			=0;// 0 - low
+	pll->ABP							=1;// 1 - 3 ns, INT-N
+	pll->CHARGE_CANCEL					=0;// 0 - disable
+	pll->CSR							=0;// 0 - disable
+	pll->CLK_DIV_MODE					=0;// 0 - disable, 1-activate fast lock
 	pll->CLOCK_DIV_VALUE				=150;
-	pll->FEEDBACK_SELECT				=1;
-	pll->RF_DIVIDER_SELECT				=0;
-	pll->BAND_SELECT_CLOCK_DIVIDER_VALUE=160;//Надо менять взависимости от частоты сравнения!!!! (fref/0.125)
-	pll->VCO_POWER_DOWN					=0;
-	pll->MTLD							=0;
-	pll->AUX_OUTPUT_SELECT				=0;
-	pll->AUX_OUTPUT_ENABLE				=0;
-	pll->AUX_OUTPUT_POWER				=0;
-	pll->RF_OUTPUT_ENABLE				=1;
-	pll->OUTPUT_POWER					=3;
-	pll->LD_PIN_MODE					=1;	
+	pll->FEEDBACK_SELECT				=1;// 1 - fundamental
+	pll->RF_DIVIDER_SELECT				=0;// RF divider :1 
+	pll->BAND_SELECT_CLOCK_DIVIDER_VALUE=8;//Надо менять взависимости от частоты сравнения!!!! (fref/0.125)
+	pll->VCO_POWER_DOWN					=0;// 0 - VCO power up
+	pll->MTLD							=0;// 0 - mute disable
+	pll->AUX_OUTPUT_SELECT				=0;//
+	pll->AUX_OUTPUT_ENABLE				=0;//0 - disable (port B)
+	pll->AUX_OUTPUT_POWER				=0;//0 - -4DBm
+	pll->RF_OUTPUT_ENABLE				=1;//1 - enable
+	pll->OUTPUT_POWER					=3;//3 - +5DBm
+	pll->LD_PIN_MODE					=1;//1 - LOCK DETECT DIGITAL	
 	
 
 }
@@ -147,29 +147,29 @@ void init_array_pll (reg_ADF4351 *pll)
 			  (5);		  
 	
 	//----------------
-	
-	pll->R[0]=0x3C0000;
-	pll->R[1]=0x8008011;
-	pll->R[2]=0x19009F42;
+	/*
+	pll->R[0]=0x5DC0000;
+	pll->R[1]=0x8011;
+	pll->R[2]=0x190C9F42;
 	pll->R[3]=0x4004B3;
-	pll->R[4]=0x8C842C;
+	pll->R[4]=0x80803C;
 	pll->R[5]=0x580005;
-
+*/
 	
 }
 
 void ADF4351_prog (u32 freq)
 {
-	int i=0;
-	u32 PFD=1;
+	int i  =0;
+	u32 PFD=1;//MHz
 	u32 INT=0;
-	u32 R=0;
+	u32 R  =0;
 	
-	INT=freq/PFD*2;	
+	INT=freq/PFD;	
 	
 	INIT_PLL 		(&pll1); //инициализируем структуру
 	
-//	pll1.INT=INT;
+	pll1.INT=INT;
 	
 	init_array_pll	(&pll1); //записываем транспортный массив
 	

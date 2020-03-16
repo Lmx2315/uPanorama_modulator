@@ -537,6 +537,7 @@ void MSG_SHOW (void);
 u32 SEND_UDP_MSG (void);
 void ADF4351_prog (u32);
 void RECEIVE_udp(SOCKET , uint16 );
+void ATT (u8);
 //void SEND_udp(SOCKET , uint16 ,uint32 ,uint16 );
 
 
