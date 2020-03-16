@@ -183,6 +183,7 @@ u32 TIME_TEST=0;
 u32 ID_CMD=0;						//переменная хранить текущий ID наших квитанций 
 
 u8 PWR_CHANNEL=255;
+u8 FLAG_PLL_ZAHVAT=0;  //переменная отвечающая за сигнал захвата ФАПЧ
 //-----------------------------------------------------------------------------
 //                           описание структур управления и квитанций
 /* USER CODE END PV */
@@ -823,7 +824,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   
     /*Configure GPIO pin :  */
-  GPIO_InitStruct.Pin  = GPIO_PIN_4;
+  GPIO_InitStruct.Pin  = GPIO_PIN_2|GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -1970,7 +1971,7 @@ void CMD_search (ID_SERVER *id,SERVER *srv)
 			TIME_SYS	    //текущее системное время 
 			);	
 			SERV_ID_DEL (id,i);//удаляем команду из реестра
-		}
+		}else
 		
 		if (id->CMD_TYPE[i]==CMD_STATUS)//команда запроса состояни
 		{
@@ -1995,11 +1996,9 @@ void CMD_search (ID_SERVER *id,SERVER *srv)
 			
 //			Transf("Запрос состояния!\r\n");	
 			un_out("[",TIME_SYS);Transf("]\r\n");
-		}	
+		}else		
 		
-		
-		
-		if (id->CMD_TYPE[i]==CMD_12V)//команда включения источника +12V
+		if (id->CMD_TYPE[i]==CMD_FREQ)//команда установки частоты модулятора , МГЦ
 		{
 			idx0=idx_srv(id->INDEX[i],0);//индекс расположения данных в "хранилище"
 			idx1=idx_srv(id->INDEX[i],1);//индекс расположения данных в "хранилище"
@@ -2008,7 +2007,7 @@ void CMD_search (ID_SERVER *id,SERVER *srv)
 			
 			data=((srv->MeM[idx0])<<24)|((srv->MeM[idx1])<<16)|((srv->MeM[idx2])<< 8)|((srv->MeM[idx3]));
 			
-			START_BP=data;//выполняем команду
+			ADF4351_prog(data);//выполняем команду
 			
 			ADR=ADR_FINDER(id->SENDER_ID[i],&ADDR_SNDR);//ищем порядковый номер отправителя в структуре отправителей, если его там нет  - то заносим туда
 
@@ -2022,15 +2021,103 @@ void CMD_search (ID_SERVER *id,SERVER *srv)
 			);	
 			SERV_ID_DEL (id,i);//удаляем команду из реестра
 			
-			Transf("Управление питанием +12V!\r\n");
-			u_out("START_BP:",START_BP);
+			Transf("Установка частоты модулятора!\r\n");
+			u_out("freq:",data);
+		}else 
+		if (id->CMD_TYPE[i]==CMD_ATT)//команда установки аттенюатора
+		{
+			idx0=idx_srv(id->INDEX[i],0);//индекс расположения данных в "хранилище"
+			idx1=idx_srv(id->INDEX[i],1);//индекс расположения данных в "хранилище"
+			idx2=idx_srv(id->INDEX[i],2);//индекс расположения данных в "хранилище"
+			idx3=idx_srv(id->INDEX[i],3);//индекс расположения данных в "хранилище"
+			
+			data=((srv->MeM[idx0])<<24)|((srv->MeM[idx1])<<16)|((srv->MeM[idx2])<< 8)|((srv->MeM[idx3]));
+			
+			ATT(data);//выполняем команду
+			
+			ADR=ADR_FINDER(id->SENDER_ID[i],&ADDR_SNDR);//ищем порядковый номер отправителя в структуре отправителей, если его там нет  - то заносим туда
+
+			ERROR_CMD_MSG ( //заполняем квитанцию о выполнении команды
+			id,			    //указатель на реестр
+			&INVOICE[ADR],  //указатель на структуру квитанции
+			i, 			    //индекс команды в реестре
+			MSG_CMD_OK,	    //сообщение квитанции
+			0,				//данные квитанции
+			TIME_SYS	    //текущее системное время 
+			);	
+			SERV_ID_DEL (id,i);//удаляем команду из реестра
+			
+			Transf("Установка уровня подавления аттенюатора!\r\n");
+			u_out("ATT:",data);
+		} else
+		if (id->CMD_TYPE[i]==CMD_POWERUP)//команда установки аттенюатора
+		{
+			idx0=idx_srv(id->INDEX[i],0);//индекс расположения данных в "хранилище"
+			idx1=idx_srv(id->INDEX[i],1);//индекс расположения данных в "хранилище"
+			idx2=idx_srv(id->INDEX[i],2);//индекс расположения данных в "хранилище"
+			idx3=idx_srv(id->INDEX[i],3);//индекс расположения данных в "хранилище"
+			
+			data=((srv->MeM[idx0])<<24)|((srv->MeM[idx1])<<16)|((srv->MeM[idx2])<< 8)|((srv->MeM[idx3]));
+			
+			//выполняем команду
+			if (data!=0)
+			{
+				GK153_PWRDN	  (1);
+				ADL_PWRDN	  (1);// 1 - powerdown ADL5375
+				APLF1_PWRDN	  (1);// 1 - усилитель (1) выключен
+				APLF2_PWRDN	  (1);// 1 - усилитель (2) выключен
+				ADL5501_PWRDN (1);// 1 - ADL5501 ENABLE
+				PWR_5V_EN     (0);// 1 - включить tps7a8300
+				PWR_3V_EN	  (0);// 1 - включить tps7a8300	
+				PWR_HM_EN  	  (0);// 0 - pwrdn MIC5205
+			HM_TR_ENABLE_3V3  (0);// 0 - SLEEP 		HM-TR	
+			}else
+			{
+				GK153_PWRDN	  (0);
+				ADL_PWRDN	  (0);// 1 - powerdown ADL5375
+				APLF1_PWRDN	  (0);// 1 - усилитель (1) выключен
+				APLF2_PWRDN	  (0);// 1 - усилитель (2) выключен
+				ADL5501_PWRDN (0);// 1 - ADL5501 ENABLE
+				PWR_5V_EN     (1);// 1 - включить tps7a8300
+				PWR_3V_EN	  (1);// 1 - включить tps7a8300	
+				PWR_HM_EN  	  (1);// 0 - pwrdn MIC5205
+			HM_TR_ENABLE_3V3  (1);// 0 - SLEEP 		HM-TR	
+			}
+			
+			ADR=ADR_FINDER(id->SENDER_ID[i],&ADDR_SNDR);//ищем порядковый номер отправителя в структуре отправителей, если его там нет  - то заносим туда
+
+			ERROR_CMD_MSG ( //заполняем квитанцию о выполнении команды
+			id,			    //указатель на реестр
+			&INVOICE[ADR],  //указатель на структуру квитанции
+			i, 			    //индекс команды в реестре
+			MSG_CMD_OK,	    //сообщение квитанции
+			0,				//данные квитанции
+			TIME_SYS	    //текущее системное время 
+			);	
+			SERV_ID_DEL (id,i);//удаляем команду из реестра
+			
+			Transf("Установка уровня подавления аттенюатора!\r\n");
+			u_out("ATT:",data);
 		}
-		
 		
 	//	if (id->TIME<TIME_SYS)
 	}
 }
 
+void PLL_ZAHVAT (void)//наблюдает за сигналом захвата ФАПЧ
+{
+	static u8 t1=0;
+	FLAG_PLL_ZAHVAT=ADF_LD();  
+	if ((FLAG_PLL_ZAHVAT==1)&&(t1==0))
+	{
+		    Transf("Захват ФАПЧ!\r\n");
+		t1=1;
+	}else
+		if ((FLAG_PLL_ZAHVAT==0)&&(t1==1))
+		{
+			Transf("Авария ФАПЧ!\r\n");
+		}
+}
 
 u8 PIN_control_PB5 (void)
 {
@@ -2092,9 +2179,9 @@ int main(void)
 
 //  Delay(1000);
   
-  Transf("-------------\r\n");
+  Transf("-------------------\r\n");
   Transf("    uПанорама\r\n");
-  Transf("-------------\r\n");
+  Transf("-------------------\r\n");
   
   PWDWN_WIZ820(1);
 
@@ -2102,15 +2189,10 @@ int main(void)
   LED2(1);
   LED3(1);
 
-
   Massiv_dbm();
  
   HAL_UART_Receive_IT(&huart1,RX_uBUF,1);
   HAL_ADC_Start_DMA  (&hadc1,(uint32_t*)&adcBuffer,16); // Start ADC in DMA 
-
-
-
-
 
  GK153_PWRDN		(0);
  ADL_PWRDN			(0);// 1 - powerdown ADL5375
@@ -2138,10 +2220,7 @@ int main(void)
  
 
 ADF_LE	  (0);//сигнал загрузки в м-му ADF 
-SPI3_CS_MK(0);//выключение микрухи ADF
- 
-
- 
+SPI3_CS_MK(0);//выключение микрухи ADF 
  ATT (0);
 //--------init wiz820------------------
 
@@ -2171,6 +2250,7 @@ SPI3_CS_MK(0);//выключение микрухи ADF
   {
 	LED();
 	UART_conrol();
+	PLL_ZAHVAT ();
 	
 	if (EVENT_INT8==1)
 	{

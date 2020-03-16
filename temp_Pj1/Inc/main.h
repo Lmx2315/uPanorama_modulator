@@ -140,10 +140,6 @@ typedef uint32			u_long;		/**< 32-bit value */
 #define PB12_0  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12,GPIO_PIN_RESET)
 #define PB12_1  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12,GPIO_PIN_SET)
 
-
-
-
-
 #define PC0_0  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0,GPIO_PIN_RESET)
 #define PC0_1  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0,GPIO_PIN_SET)
 
@@ -280,21 +276,21 @@ typedef uint32			u_long;		/**< 32-bit value */
 #define LED2(a) 		((a==1)?PC14_1 : PC14_0)
 #define LED3(a) 		((a==1)?PC15_1 : PC15_0)
 
-#define ADF_LE(a) 	 		((a==1)?PC5_1  : PC5_0 )
-#define GK153_PWRDN(a) 	 	((a==1)?PC0_1  : PC0_0 )
-#define ADL_PWRDN(a) 	 	((a==1)?PC1_1  : PC1_0 )
-#define APLF1_PWRDN(a) 	 	((a==1)?PA11_1 : PA11_0)
-#define APLF2_PWRDN(a) 	 	((a==1)?PA12_1 : PA12_0)
-#define ADL5501_PWRDN(a)  	((a==1)?PB6_1  : PB6_0)
-#define UPR_SWITCH1(a)  	((a==1)?PB7_1  : PB7_0)
-#define PWR_5V_EN(a)  		((a==1)?PE0_1  : PE0_0)
-#define PWR_3V_EN(a)  		((a==1)?PE1_1  : PE1_0)
-#define PWR_HM_EN(a)  		((a==1)?PE3_1  : PE3_0)
-#define PWDWN_WIZ820(a)  	((a==1)?PE7_1  : PE7_0)
-#define RESET_WIZ(a)  		((a==1)?PE8_1  : PE8_0)
+#define ADF_LE(a) 	 		((a==1)?PC5_1   : PC5_0 )
+#define GK153_PWRDN(a) 	 	((a==1)?PC0_1   : PC0_0 )
+#define ADL_PWRDN(a) 	 	((a==1)?PC1_1   : PC1_0 )
+#define APLF1_PWRDN(a) 	 	((a==1)?PA11_1  : PA11_0)
+#define APLF2_PWRDN(a) 	 	((a==1)?PA12_1  : PA12_0)
+#define ADL5501_PWRDN(a)  	((a==1)?PB6_1   : PB6_0)
+#define UPR_SWITCH1(a)  	((a==1)?PB7_1   : PB7_0)
+#define PWR_5V_EN(a)  		((a==1)?PE0_1   : PE0_0)
+#define PWR_3V_EN(a)  		((a==1)?PE1_1   : PE1_0)
+#define PWR_HM_EN(a)  		((a==1)?PE3_1   : PE3_0)
+#define PWDWN_WIZ820(a)  	((a==1)?PE7_1   : PE7_0)
+#define RESET_WIZ(a)  		((a==1)?PE8_1   : PE8_0)
 
-#define HM_TR_ENABLE_3V3(a)	((a==1)?PD0_1  : PD0_0)
-#define HM_TR_CONFIG_3V3(a)	((a==1)?PD1_1  : PD1_0)
+#define HM_TR_ENABLE_3V3(a)	((a==1)?PD0_1   : PD0_0)
+#define HM_TR_CONFIG_3V3(a)	((a==1)?PD1_1   : PD1_0)
 
 #define LE_A_ATT(a)			((a==1)?PD9_1   : PD9_0)
 #define D0_S1(a)			((a==1)?PD10_1  : PD10_0)
@@ -307,8 +303,9 @@ typedef uint32			u_long;		/**< 32-bit value */
 #define SPI2_CS1(a)			((a==1)?PB10_1  : PB10_0)
 #define SPI3_CS_MK(a)		((a==1)?PC9_1   : PC9_0)
 #define SPI4_NSS_MK(a)		((a==1)?PE4_1   : PE4_0)
-
-#define WDI_MK(a)  		 ((a==1)?PB9_1 : PB9_0)
+#define WDI_MK(a)  		    ((a==1)?PB9_1   : PB9_0)
+#define ADF_LD()   HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_2)
+#define ADF_MUX()  HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4)
 
 #define u64 unsigned long long
 #define u32 unsigned int
@@ -407,6 +404,10 @@ typedef uint32			u_long;		/**< 32-bit value */
 #define CMD_LED			200 //команда управления светодиодами лицевой панели
 #define CMD_xxx			300
 #define CMD_CH_UP		4   //команда включения/выключения каналов питания , канал в данных передаётся (вкл/выкл - инверсные коды)
+#define CMD_FREQ		5   //установить частоту модулятора
+#define CMD_ATT 		6   //задать уровень аттенюатора
+#define CMD_POWERUP		7   //включить / выключить
+#define CMD_FREQ_PIPE	8   //установить частоту свистка
 //------------------------------------------------------------------------
  
 #define SIZE_SERVER   1024//размер буфера "Хранилище"  тут хранятся данные команды пришедших пакетов сами команды хранятся в реестре
