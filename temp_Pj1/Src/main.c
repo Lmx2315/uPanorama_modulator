@@ -20,7 +20,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -1480,7 +1479,7 @@ if (strcmp(Word,"att")==0) //
 if (strcmp(Word,"APLF")==0) //
    {
 	  crc_comp =atoi  (DATA_Word); 
-      u_out ("принял att:",crc_comp); 
+      u_out ("принял APLF:",crc_comp); 
 	  APLF1_PWRDN (crc_comp);// 1 - усилитель (1) выключен
 	  APLF2_PWRDN (crc_comp);// 1 - усилитель (2) выключен
    } else
@@ -2232,7 +2231,7 @@ int main(void)
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 
    GK153_PWRDN		(0);
-   ADL_PWRDN			(0);// 1 - powerdown ADL5375
+   ADL_PWRDN		(0);// 1 - powerdown ADL5375
  
    APLF1_PWRDN		(1);// 1 - усилитель (1) выключен
    APLF2_PWRDN		(1);// 1 - усилитель (2) выключен
